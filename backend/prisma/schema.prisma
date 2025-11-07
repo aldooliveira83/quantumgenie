@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  rituals   UserRitual[]
+  progress  Progress[]
+}
+
+model Ritual {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  category    String
+  duration    Int
+  difficulty  String
+  benefits    String[]
+  steps       String[]
+  createdAt   DateTime @default(now())
+  
+  users UserRitual[]
+}
+
+model UserRitual {
+  id        String   @id @default(uuid())
+  userId    String
+  ritualId  String
+  startedAt DateTime @default(now())
+  
+  user   User   @relation(fields: [userId], references: [id])
+  ritual Ritual @relation(fields: [ritualId], references: [id])
+  
+  @@unique([userId, ritualId])
+}
+
+model Progress {
+  id          String   @id @default(uuid())
+  userId      String
+  date        DateTime @default(now())
+  completed   Boolean
+  notes       String?
+  
+  user User @relation(fields: [userId], references: [id])
+}
+EOFcat > .gitignore << 'EOF'
+node_modules/
+.env
+.env.local
+dist/
+build/
+.DS_Store
+*.log
