@@ -1,0 +1,11 @@
+{
+  "name": "quantumgenie",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd backend && npm install && npx prisma generate && npm run build",
+    "start": "cd backend && node dist/main.js"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
