@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: quantumgenie-api
+    env: node
+    region: oregon
+    buildCommand: cd backend && npm install && npx prisma generate && npm run build
+    startCommand: cd backend && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantumgenie-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: quantumgenie-redis
+          type: redis
+          property: connectionString
+
+databases:
+  - name: quantumgenie-db
+    databaseName: quantumgenie
+    plan: starter
+
+  - name: quantumgenie-redis
+    type: redis
+    plan: starter
